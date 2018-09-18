@@ -2,6 +2,7 @@ package edu.csc413.calculator.evaluator;
 
 
 
+import edu.csc413.calculator.operators.LeftParenOperator;
 import edu.csc413.calculator.operators.Operator;
 
 import java.util.Stack;
@@ -11,7 +12,7 @@ public class Evaluator {
   private Stack<Operand> operandStack;
   private Stack<Operator> operatorStack;
   private StringTokenizer tokenizer;
-  private static final String DELIMITERS = "+-*^/";
+  private static final String DELIMITERS = "+-*^/()";
 
   public Evaluator() {
     operandStack = new Stack<>();
@@ -37,7 +38,17 @@ public class Evaluator {
       if ( !( token = this.tokenizer.nextToken() ).equals( " " )) {
         // check if token is an operand
         if ( Operand.check( token )) {
-          operandStack.push( new Operand( token ));
+          operandStack.push(new Operand(token));
+        } else if (token.equals("(")) {// check the left paren
+          operatorStack.push(Operator.getOperator("("));
+        } else if (token.equals(")")) { //check right paren
+          while (!(operatorStack.peek() instanceof LeftParenOperator)) {
+            Operator oldOpr = operatorStack.pop();
+            Operand op2 = operandStack.pop();
+            Operand op1 = operandStack.pop();
+            operandStack.push(oldOpr.execute(op1, op2));
+          }
+          operatorStack.pop();
         } else {
           if ( ! Operator.check( token )) {
             System.out.println( "*****invalid token******" );
@@ -49,9 +60,10 @@ public class Evaluator {
           // The Operator class should contain an instance of a HashMap,
           // and values will be instances of the Operators.  See Operator class
           // skeleton for an example.
-          Operator newOperator = new Operator();
-          
-          while (operatorStack.peek().priority() >= newOperator.priority() ) {
+          Operator newOperator = Operator.getOperator(token);
+
+          //make sure stack is not empty
+          while (!operatorStack.isEmpty() && operatorStack.peek().priority() >= newOperator.priority()) {
             // note that when we eval the expression 1 - 2 we will
             // push the 1 then the 2 and then do the subtraction operation
             // This means that the first number to be popped is the
@@ -59,7 +71,7 @@ public class Evaluator {
             Operator oldOpr = operatorStack.pop();
             Operand op2 = operandStack.pop();
             Operand op1 = operandStack.pop();
-            operandStack.push( oldOpr.execute( op1, op2 ));
+            operandStack.push(oldOpr.execute(op1, op2));
           }
 
           operatorStack.push( newOperator );
@@ -78,7 +90,15 @@ public class Evaluator {
     // evaluating the operator stack until it only contains the init operator;
     // Suggestion: create a method that takes an operator as argument and
     // then executes the while loop.
-    
-    return 0;
+    while (!operatorStack.empty()) {
+      Operator op = operatorStack.pop();
+      Operand v2 = operandStack.pop();
+      Operand v1 = operandStack.pop();
+
+      operandStack.push(op.execute(v1, v2));
+    }
+
+
+    return operandStack.peek().getValue();
   }
 }

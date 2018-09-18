@@ -1,7 +1,6 @@
 package edu.csc413.calculator.operators;
 
 
-
 import edu.csc413.calculator.evaluator.Operand;
 
 import java.util.HashMap;
@@ -17,18 +16,33 @@ public abstract class Operator {
     // HashMap operators = new HashMap();
     // operators.put( "+", new AdditionOperator() );
     // operators.put( "-", new SubtractionOperator() );
-    
-    
+    private static HashMap<String, Operator> operators;
+
     public abstract int priority();
     public abstract Operand execute(Operand op1, Operand op2 );
-
 
     /**
      * determines if a given token is a valid operator.
      * please do your best to avoid static checks
      */
     public static boolean check( String token ) {
-        return false;
+        return operators.containsKey(token);
+    }
+
+    public static Operator getOperator( String token ) {
+
+        return operators.get(token);
+    }
+
+    static {
+        operators = new HashMap<>();
+        operators.put("+", new AddOperator());
+        operators.put("-", new SubtractOperator());
+        operators.put("*", new MultiplyOperator());
+        operators.put("/", new DivideOperator());
+        operators.put("^", new PowerOperator());
+        operators.put("(", new LeftParenOperator());
+        operators.put(")", new RightParenOperator());
     }
 
 }
