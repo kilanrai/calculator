@@ -16,24 +16,28 @@ public abstract class Operator {
     // HashMap operators = new HashMap();
     // operators.put( "+", new AdditionOperator() );
     // operators.put( "-", new SubtractionOperator() );
+
+    //declare private HashMap
     private static HashMap<String, Operator> operators;
 
     public abstract int priority();
-    public abstract Operand execute(Operand op1, Operand op2 );
+
+    public abstract Operand execute(Operand op1, Operand op2);
 
     /**
      * determines if a given token is a valid operator.
      * please do your best to avoid static checks
      */
-    public static boolean check( String token ) {
+    public static boolean check(String token) {
         return operators.containsKey(token);
     }
 
-    public static Operator getOperator( String token ) {
+    public static Operator getOperator(String token) {
 
         return operators.get(token);
     }
 
+    //initialise the operator HashMap
     static {
         operators = new HashMap<>();
         operators.put("+", new AddOperator());

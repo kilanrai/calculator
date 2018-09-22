@@ -14,8 +14,8 @@ public class EvaluatorUI extends JFrame implements ActionListener {
     // numbered from left to right, top to bottom
     // bText[] array contains the text for corresponding buttons
     private static final String[] bText = {
-        "7", "8", "9", "+", "4", "5", "6", "-", "1", "2", "3",
-        "*", "0", "^", "=", "/", "(", ")", "C", "CE"
+            "7", "8", "9", "+", "4", "5", "6", "-", "1", "2", "3",
+            "*", "0", "^", "=", "/", "(", ")", "C", "CE"
     };
 
     /**

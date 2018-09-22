@@ -22,7 +22,7 @@ public class Operand {
    * return value of opernad
    */
   public int getValue() {
-      return value;
+    return value;
   }
   /**
    * Check to see if given token is a valid
